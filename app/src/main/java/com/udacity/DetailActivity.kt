@@ -1,5 +1,7 @@
 package com.udacity
 
+import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_detail.*
@@ -14,17 +16,18 @@ import com.udacity.DownloadStatus
 import com.udacity.DownloadStatus.FAILED
 import com.udacity.DownloadStatus.SUCCESSFUL
 import com.udacity.databinding.ActivityDetailBinding
+import com.udacity.databinding.ContentDetailBinding
 
 
 class DetailActivity : AppCompatActivity() {
 
-    /*private val fileName by lazy {
+    private val fileName by lazy {
         intent?.extras?.getString(EXTRA_FILE_NAME, unknownText) ?: unknownText
     }
     private val downloadStatus by lazy {
         intent?.extras?.getString(EXTRA_DOWNLOAD_STATUS, unknownText) ?: unknownText
     }
-*/
+
     private val unknownText by lazy { getString(R.string.unknown) }
 
     private lateinit var binding : ActivityDetailBinding
@@ -35,37 +38,40 @@ class DetailActivity : AppCompatActivity() {
 
         binding.apply {
                 setSupportActionBar(toolbar)
-                content_detail.initializeView()
+                contentDetail.initializeView()
             }
 
     }
 
 
-    private fun DetailContentBinding.initializeView() {
+    private fun ContentDetailBinding.initializeView() {
         fileNameText.text = fileName
         downloadStatusText.text = downloadStatus
-        okButton.setOnClickListener { finish() }
+        okButton.setOnClickListener {
+         //   finish()
+          startActivity(Intent(applicationContext, MainActivity::class.java))
+        }
         changeViewForDownloadStatus()
     }
 
-    private fun DetailContentBinding.changeViewForDownloadStatus() {
+    private fun ContentDetailBinding.changeViewForDownloadStatus() {
         when (downloadStatusText.text) {
             SUCCESSFUL.statusText -> {
-                changeDownloadStatusImageTo(R.drawable.ic_check_circle_outline_24)
+                changeDownloadStatusImageTo(R.drawable.ic_check_circle)
                 changeDownloadStatusColorTo(R.color.colorPrimaryDark)
             }
             FAILED.statusText -> {
-                changeDownloadStatusImageTo(R.drawable.ic_error_24)
-                changeDownloadStatusColorTo(R.color.design_default_color_error)
+                changeDownloadStatusImageTo(R.drawable.ic_error)
+                changeDownloadStatusColorTo(R.color.colorPrimary)
             }
         }
     }
 
-    private fun DetailContentBinding.changeDownloadStatusImageTo(@DrawableRes imageRes: Int) {
+    private fun ContentDetailBinding.changeDownloadStatusImageTo(@DrawableRes imageRes: Int) {
         downloadStatusImage.setImageResource(imageRes)
     }
 
-    private fun DetailContentBinding.changeDownloadStatusColorTo(@ColorRes colorRes: Int) {
+    private fun ContentDetailBinding.changeDownloadStatusColorTo(@ColorRes colorRes: Int) {
         ContextCompat.getColor(this@DetailActivity, colorRes)
             .also { color ->
                 downloadStatusImage.imageTintList = ColorStateList.valueOf(color)

@@ -14,6 +14,7 @@ import timber.log.Timber
 import java.lang.Math.min
 import java.util.concurrent.TimeUnit
 import kotlin.properties.Delegates
+import com.udacity.ButtonState.*
 //import com.udacity.util.ext.disableViewDuringAnimation
 
 //https://github.com/filipebezerra/loading-status-bar-app-android-kotlin/blob/main/app/src/main/res/values/strings.xml
@@ -70,11 +71,11 @@ class LoadingButton @JvmOverloads constructor(
         disableViewDuringAnimation(this@LoadingButton)
     }
 
-    private var buttonState: ButtonState by Delegates.observable<ButtonState>(ButtonState.Completed) { p, old, newState  ->
+    private var buttonState: ButtonState by Delegates.observable<ButtonState>(Completed) { p, old, newState  ->
 
         Timber.d("Button state changed: $newState")
         when (newState) {
-            ButtonState.Loading -> {
+            Loading -> {
                 // LoadingButton is now Loading and we need to set the correct text
                 buttonText = loadingText.toString()
 
@@ -93,7 +94,7 @@ class LoadingButton @JvmOverloads constructor(
                 buttonText = loadingDefaultText.toString()
 
                 // ProgressCircle animation must stop now
-                newState.takeIf { it == ButtonState.Completed }?.run { animatorSet.cancel() }
+                newState.takeIf { it == Completed }?.run { animatorSet.cancel() }
             }
         }
     }
@@ -166,8 +167,8 @@ class LoadingButton @JvmOverloads constructor(
     override fun performClick(): Boolean {
         super.performClick()
         // We only change button state to Clicked if the current state is Completed
-        if (buttonState == ButtonState.Completed) {
-            buttonState = ButtonState.Clicked
+        if (buttonState == Completed) {
+            buttonState = Clicked
             invalidate()
         }
         return true
@@ -185,7 +186,7 @@ class LoadingButton @JvmOverloads constructor(
         }
     }
 
-    private fun drawButtonText() {
+    private fun Canvas.drawButtonText() {
         // Draw the Loading Text at the Center of the Canvas
         // ref.: https://blog.danlew.net/2013/10/03/centering_single_line_text_in_a_canvas/
         buttonTextPaint.color = loadingTextColor
@@ -203,9 +204,9 @@ class LoadingButton @JvmOverloads constructor(
     /**
      * Draws the default button background color using [loadingBackgroundColor].
      */
-    private fun drawBackgroundColor() {
+    private fun Canvas.drawBackgroundColor() {
         when (buttonState) {
-            ButtonState.Loading -> {
+            Loading -> {
                 drawLoadingBackgroundColor()
                 drawDefaultBackgroundColor()
             }
@@ -216,7 +217,7 @@ class LoadingButton @JvmOverloads constructor(
     /**
      * Draws the [Rect] with [loadingBackgroundColor] representing the loading progress.
      */
-    private fun drawLoadingBackgroundColor() = buttonPaint.apply {
+    private fun Canvas.drawLoadingBackgroundColor() = buttonPaint.apply {
         color = loadingBackgroundColor
     }.run {
         drawRect(
@@ -231,7 +232,7 @@ class LoadingButton @JvmOverloads constructor(
     /**
      * Draws the [Rect] with [loadingDefaultBackgroundColor] representing the background of the button.
      */
-    private fun drawDefaultBackgroundColor() = buttonPaint.apply {
+    private fun Canvas.drawDefaultBackgroundColor() = buttonPaint.apply {
         color = loadingDefaultBackgroundColor
     }.run {
         drawRect(
@@ -246,15 +247,15 @@ class LoadingButton @JvmOverloads constructor(
     /**
      * Draws progress circle if [buttonState] is [ButtonState.Loading].
      */
-    private fun drawProgressCircleIfLoading() =
-        buttonState.takeIf { it == ButtonState.Loading }?.let { drawProgressCircle(this) }
+    private fun Canvas.drawProgressCircleIfLoading() =
+        buttonState.takeIf { it == Loading }?.let { drawProgressCircle(this) }
 
     /**
      * Draws the progress circle using an arc only when [buttonState] changes to [ButtonState.Loading].
      * The sweep angle uses [currentProgressCircleAnimationValue] which is changed according to when
      * [progressCircleAnimator] send updates after the values for the animation have been calculated.
      */
-    private fun drawProgressCircle(buttonCanvas: LoadingButton) {
+    private fun drawProgressCircle(buttonCanvas: Canvas) {
         buttonPaint.color = progressCircleBackgroundColor
         buttonCanvas.drawArc(
             progressCircleRect,

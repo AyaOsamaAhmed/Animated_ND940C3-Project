@@ -18,7 +18,7 @@ class DownloadNotificator(private val context: Context, private val lifecycle: L
 
     fun notify(
         fileName: String,
-        downloadStatus: DownloadStatus,
+        downloadStatus: DownloadStatus
     ) {
         if (lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED)) {
             Timber.d("Notifying with a Toast. Lifecycle is resumed")

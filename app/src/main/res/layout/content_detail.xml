@@ -4,7 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
 >
-<androidx.constraintlayout.widget.ConstraintLayout
+<androidx.constraintlayout.motion.widget.MotionLayout
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layout_behavior="@string/appbar_scrolling_view_behavior"
@@ -12,6 +12,7 @@
     android:padding="20dp"
     tools:context=".DetailActivity"
     tools:showIn="@layout/activity_detail">
+
 
 
     <TextView
@@ -53,7 +54,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="@string/download_status_content_description"
-        tools:srcCompat="@drawable/ic_check_circle_outline_24"
+        tools:srcCompat="@drawable/ic_check_circle"
         tools:tint="?attr/colorPrimaryDark"
         />
 
@@ -66,5 +67,5 @@
         android:text="@android:string/ok"
         android:textColor="@android:color/white"
         />
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.constraintlayout.motion.widget.MotionLayout>
 </layout>
